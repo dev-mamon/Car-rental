@@ -23,6 +23,11 @@ class RegisteredUserController extends Controller
         return Inertia::render('Auth/Register');
     }
 
+    public function createTest(): Response
+    {
+        return Inertia::render('Auth/RegisterTest');
+    }
+
     /**
      * Handle an incoming registration request.
      *
