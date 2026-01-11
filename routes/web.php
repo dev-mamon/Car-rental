@@ -1,9 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Foundation\Application;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Admin\CarController;
+use App\Http\Controllers\DashboardController;
 
 Route::get('/', function () {
     return Inertia::render('Guest/Home/Index', [
@@ -14,9 +16,9 @@ Route::get('/', function () {
     ]);
 });
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Guest/Home/Index');
-// })->middleware(['auth', 'verified'])->name('dashboard');
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -25,5 +27,15 @@ Route::middleware('auth')->group(function () {
 });
 Route::get('/car-details', [ProfileController::class, 'carDetails'])->name('car.details');
 Route::get('/car-list', [ProfileController::class, 'carList'])->name('car.list');
+
+// -- Admin Dashboard route --
+Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () {
+    // cars resource route
+    Route::resource('cars', CarController::class);
+});
+
+Route::fallback(function () {
+    return Inertia::render('Errors/404');
+});
 
 require __DIR__.'/auth.php';

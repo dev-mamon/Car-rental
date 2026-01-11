@@ -1,0 +1,149 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Helpers\Helper;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\CarStoreRequest;
+use App\Models\Brand;
+use App\Models\Car;
+use App\Models\Category;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Inertia\Inertia;
+
+class CarController extends Controller
+{
+    public function index(Request $request)
+    {
+        $query = Car::with(['brand', 'category', 'images', 'specifications', 'priceDetails', 'features', 'policeDocuments']);
+
+        // Search by Make, Model or Description
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('make', 'like', "%{$request->search}%")
+                    ->orWhere('model', 'like', "%{$request->search}%")
+                    ->orWhere('description', 'like', "%{$request->search}%");
+            });
+        }
+
+        // Advanced Filters
+        if ($request->brand) {
+            $query->whereHas('brand', fn ($q) => $q->where('name', $request->brand));
+        }
+        if ($request->category) {
+            $query->whereHas('category', fn ($q) => $q->where('name', $request->category));
+        }
+        if ($request->status && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
+
+        // Filtering via Specification Relationship
+        if ($request->transmission) {
+            $query->whereHas('specifications', fn ($q) => $q->where('transmission', $request->transmission));
+        }
+        if ($request->fuel_type) {
+            $query->whereHas('specifications', fn ($q) => $q->where('fuel_type', $request->fuel_type));
+        }
+
+        $cars = $query->latest()->paginate($request->per_page ?? 10)->withQueryString();
+
+        return Inertia::render('Admin/Car/Index', [
+            'cars' => $cars,
+            'brands' => Brand::all(['id', 'name']),
+            'categories' => Category::all(['id', 'name']),
+            'filters' => $request->all(),
+            'counts' => [
+                'all' => Car::count(),
+                'available' => Car::where('status', 'available')->count(),
+                'reserved' => Car::where('status', 'reserved')->count(),
+                'sold' => Car::where('status', 'sold')->count(),
+            ],
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/Car/Create', [
+            'brands' => Brand::all(['id', 'name']),
+            'categories' => Category::all(['id', 'name']),
+        ]);
+    }
+
+    public function store(CarStoreRequest $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                // 1. Create primary car record
+                $car = Car::create($request->only([
+                    'brand_id', 'category_id', 'make', 'model', 'year',
+                    'rental_type', 'description', 'status',
+                ]));
+
+                // 2. Create Specifications
+                $car->specifications()->create($request->only([
+                    'transmission', 'mileage', 'fuel_type', 'steering',
+                    'model_year', 'vehicle_type', 'engine_capacity', 'color',
+                ]));
+
+                // 3. Create Pricing Details
+                $car->priceDetails()->create($request->only([
+                    'daily_rate', 'weekly_rate', 'monthly_rate',
+                    'security_deposit', 'tax_percentage', 'currency',
+                ]));
+
+                // 4. Create Documents
+                $car->policeDocuments()->create($request->only([
+                    'registration_number', 'chassis_number', 'engine_number',
+                    'tax_token_expiry', 'fitness_expiry',
+                ]));
+
+                // 5. Create Features
+                if ($request->has('features') && is_array($request->features)) {
+                    $features = array_filter($request->features, function ($feature) {
+                        return ! empty($feature['feature_name']);
+                    });
+
+                    if (! empty($features)) {
+                        $car->features()->createMany($features);
+                    }
+                }
+
+                // 6. Create FAQs
+                if ($request->has('faqs') && is_array($request->faqs)) {
+                    $faqs = array_filter($request->faqs, function ($faq) {
+                        return ! empty($faq['question']) && ! empty($faq['answer']);
+                    });
+
+                    if (! empty($faqs)) {
+                        $car->faqs()->createMany($faqs);
+                    }
+                }
+
+                // 7. Handle Image Uploads
+                if ($request->hasFile('images')) {
+                    foreach ($request->file('images') as $image) {
+                        $path = Helper::uploadFile($image, 'cars/gallery');
+                        $car->images()->create(['file_path' => $path]);
+                    }
+                }
+            });
+
+            return redirect()
+                ->route('admin.cars.index')
+                ->with('success', 'Vehicle listed successfully in the marketplace.');
+
+        } catch (\Exception $e) {
+            Log::info('Error details:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+                'request' => $request->all(),
+            ]);
+
+            return back()
+                ->withInput()
+                ->withErrors(['error' => 'Failed to create car. Please check logs.']);
+        }
+    }
+}
