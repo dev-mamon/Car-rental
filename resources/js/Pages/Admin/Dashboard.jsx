@@ -43,8 +43,8 @@ export default function Dashboard({ auth }) {
             <Head title="Dashboard" />
             <div className="p-4 md:p-4 bg-[#F8F9FB] min-h-screen font-sans">
                 {/* Low Stock Alert */}
-                <div className="bg-orange-50 border border-orange-100 p-3 rounded-lg flex items-center justify-between mb-6">
-                    <div className="flex items-center gap-2 text-sm text-orange-800">
+                <div className="bg-secondary/10 border border-secondary/20 p-3 rounded-lg flex items-center justify-between mb-6">
+                    <div className="flex items-center gap-2 text-sm text-secondary">
                         <Info size={16} />
                         <span>
                             Your Product{" "}
@@ -57,7 +57,7 @@ export default function Dashboard({ auth }) {
                             </button>
                         </span>
                     </div>
-                    <button className="text-orange-400">✕</button>
+                    <button className="text-secondary/70">✕</button>
                 </div>
 
                 {/* Top Stat Cards */}
@@ -66,7 +66,7 @@ export default function Dashboard({ auth }) {
                         title="Total Sales"
                         value="$48,988,078"
                         change="+22%"
-                        color="bg-orange-500"
+                        color="bg-secondary"
                         icon={<ShoppingCart className="text-white" />}
                     />
                     <StatCard
@@ -88,7 +88,7 @@ export default function Dashboard({ auth }) {
                         title="Total Purchase Return"
                         value="$18,458,747"
                         change="+22%"
-                        color="bg-blue-600"
+                        color="bg-primary"
                         icon={<RotateCcw className="text-white" />}
                     />
                 </div>
@@ -152,7 +152,7 @@ export default function Dashboard({ auth }) {
                                     />
                                     <Bar
                                         dataKey="sales"
-                                        fill="#f97316"
+                                        fill="hsl(var(--secondary))"
                                         radius={[4, 4, 0, 0]}
                                         barSize={30}
                                     />
@@ -167,16 +167,16 @@ export default function Dashboard({ auth }) {
                         </h3>
                         <div className="space-y-4">
                             <InfoRow
-                                icon={<Users className="text-blue-500" />}
+                                icon={<Users className="text-primary" />}
                                 label="Suppliers"
                                 value="6987"
-                                bgColor="bg-blue-50"
+                                bgColor="bg-primary/10"
                             />
                             <InfoRow
-                                icon={<Users className="text-orange-500" />}
+                                icon={<Users className="text-secondary" />}
                                 label="Customer"
                                 value="4896"
-                                bgColor="bg-orange-50"
+                                bgColor="bg-secondary/10"
                             />
                             <InfoRow
                                 icon={

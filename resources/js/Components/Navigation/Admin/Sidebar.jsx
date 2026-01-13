@@ -198,14 +198,14 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
                                                 href={child.path}
                                                 className={`flex items-center gap-3 ml-4 py-2 px-3 rounded-md text-sm transition-all ${
                                                     url === child.path
-                                                        ? "text-orange-600 font-semibold bg-orange-50/50"
-                                                        : "text-slate-500 hover:text-orange-500 hover:bg-gray-50"
+                                                        ? "text-primary font-semibold bg-blue-50/50"
+                                                        : "text-slate-500 hover:text-blue-500 hover:bg-blue-50"
                                                 }`}
                                             >
                                                 <span
                                                     className={`${
                                                         url === child.path
-                                                            ? "text-orange-600"
+                                                            ? "text-primary"
                                                             : "text-slate-400"
                                                     }`}
                                                 >
@@ -252,13 +252,13 @@ const SidebarItem = ({
                 isCollapsed ? "justify-center px-0" : "px-3"
             } ${
                 active && !hasChild
-                    ? "bg-orange-50 text-orange-600"
-                    : "text-slate-600 hover:bg-gray-50 hover:text-orange-600"
-            } ${hasChild && active ? "text-orange-600 font-semibold" : ""}`}
+                    ? "bg-blue-50 text-primary"
+                    : "text-slate-600 hover:bg-blue-50 hover:text-primary"
+            } ${hasChild && active ? "text-primary font-semibold" : ""}`}
         >
             <div
                 className={`shrink-0 transition-colors ${
-                    active ? "text-orange-600" : "group-hover:text-orange-600"
+                    active ? "text-primary" : "group-hover:text-primary"
                 }`}
             >
                 {icon}
@@ -272,9 +272,7 @@ const SidebarItem = ({
                     <ChevronRight
                         size={14}
                         className={`transition-transform duration-200 ${
-                            isOpen
-                                ? "rotate-90 text-orange-600"
-                                : "text-gray-400"
+                            isOpen ? "rotate-90 text-primary" : "text-gray-400"
                         }`}
                     />
                 </div>

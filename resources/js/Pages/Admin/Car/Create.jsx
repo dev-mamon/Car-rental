@@ -1,23 +1,17 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { Head, useForm, Link } from "@inertiajs/react";
 import AdminLayout from "@/Layouts/AdminLayout";
-import {
-    ChevronDown,
-    ChevronUp,
-    Settings,
-    Car,
-    DollarSign,
-    ShieldCheck,
-    Plus,
-    Trash2,
-    XCircle,
-    Save,
-    HelpCircle,
-    Image as ImageIcon,
-    ChevronLeft,
-} from "lucide-react";
-import { Input } from "@/Components/ui/Input";
-import FileUpload from "@/Components/forms/FileUpload";
+import { Save, XCircle, ChevronLeft, LayoutDashboard } from "lucide-react";
+
+// Import Redesigned Partials
+import BasicInfoSection from "./Partials/Create/BasicInfoSection";
+import TechSpecsSection from "./Partials/Create/TechSpecsSection";
+import FeaturesSection from "./Partials/Create/FeaturesSection";
+import FaqSection from "./Partials/Create/FaqSection";
+import PricingSection from "./Partials/Create/PricingSection";
+import DocumentsSection from "./Partials/Create/DocumentsSection";
+import GallerySection from "./Partials/Create/GallerySection";
+import CollapsibleCard from "./Partials/Create/CollapsibleCard";
 
 export default function CarCreate({ auth, categories, brands }) {
     const { data, setData, post, processing, errors, clearErrors } = useForm({
@@ -53,22 +47,7 @@ export default function CarCreate({ auth, categories, brands }) {
         images: [],
     });
 
-    // Error clear
-    const handleInputChange = (field, value) => {
-        setData(field, value);
-        if (errors[field]) clearErrors(field);
-    };
-
-    const handleNestedChange = (field, index, subField, value) => {
-        const updated = data[field].map((item, idx) =>
-            idx === index ? { ...item, [subField]: value } : item
-        );
-        setData(field, updated);
-        const errorKey = `${field}.${index}.${subField}`;
-        if (errors[errorKey]) clearErrors(errorKey);
-    };
-
-    // UI state
+    // Sections state - keeping them open by default for easier onboarding
     const [openSections, setOpenSections] = useState({
         basic: true,
         specs: true,
@@ -82,862 +61,207 @@ export default function CarCreate({ auth, categories, brands }) {
     const toggleSection = (section) =>
         setOpenSections((prev) => ({ ...prev, [section]: !prev[section] }));
 
-    const addRow = (field, obj) => {
-        const currentItems = data[field];
-        // Filter out completely empty items before adding new one
-        const filteredItems = currentItems.filter((item) => {
-            if (field === "features") return item.feature_name.trim() !== "";
-            if (field === "faqs")
-                return item.question.trim() !== "" && item.answer.trim() !== "";
-            return true;
-        });
-        setData(field, [...filteredItems, obj]);
+    const handleInputChange = (field, value) => {
+        setData(field, value);
+        if (errors[field]) clearErrors(field);
     };
 
-    const removeRow = (field, index) =>
-        setData(
-            field,
-            data[field].filter((_, i) => i !== index)
-        );
+    const handleNestedChange = (field, index, subField, value) => {
+        const updated = [...data[field]];
+        updated[index] = { ...updated[index], [subField]: value };
+        setData(field, updated);
+        const errorKey = `${field}.${index}.${subField}`;
+        if (errors[errorKey]) clearErrors(errorKey);
+    };
+
+    const addRow = (field, obj) => {
+        const currentItems = data[field] || [];
+        setData(field, [...currentItems, obj]);
+    };
+
+    const removeRow = (field, index) => {
+        const currentItems = data[field] || [];
+        if (currentItems.length > 1) {
+            setData(
+                field,
+                currentItems.filter((_, i) => i !== index)
+            );
+        }
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        // Filter out empty features and FAQs before submitting
-        const filteredFeatures = data.features.filter(
-            (f) => f.feature_name.trim() !== ""
-        );
-        const filteredFaqs = data.faqs.filter(
-            (f) => f.question.trim() !== "" && f.answer.trim() !== ""
-        );
-
-        const formData = {
-            ...data,
-            features:
-                filteredFeatures.length > 0
-                    ? filteredFeatures
-                    : [{ feature_name: "Standard Features" }],
-            faqs: filteredFaqs,
-        };
-
         post(route("admin.cars.store"), {
-            data: formData,
             forceFormData: true,
             preserveScroll: true,
-            onError: (errors) => {
-                console.log("Form errors:", errors);
-            },
-            onSuccess: () => {
-                console.log("Car created successfully");
-            },
         });
     };
 
-    // Label Helper
-    const Label = ({ children, required }) => (
-        <label className="text-[13px] font-semibold text-gray-700">
-            {children} {required && <span className="text-red-500">*</span>}
-        </label>
-    );
-
     return (
         <AdminLayout user={auth.user}>
-            <Head title="Create New Car" />
-            <div className="px-4 bg-[#F8F9FB] min-h-screen font-sans space-y-8 pb-10">
-                <div className="flex justify-between items-center max-w-8xl mx-auto pt-6">
-                    <div>
-                        <h1 className="text-xl md:text-3xl font-bold text-slate-800">
-                            Create New Vehicle
-                        </h1>
-                        <p className="text-sm text-gray-500">
-                            All fields marked with{" "}
-                            <span className="text-red-500">*</span> are required
-                        </p>
+            <Head title="Add Vehicle | Admin Dashboard" />
+
+            <div className="bg-[#FDFDFD] min-h-screen">
+                {/* Modern Sticky Header */}
+                <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-gray-100 px-8 py-4">
+                    <div className="flex justify-between items-center max-w-[1600px] mx-auto">
+                        <div>
+                            <div className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-tighter mb-1">
+                                <LayoutDashboard size={14} />
+                                <span>Inventory Management</span>
+                            </div>
+                            <h1 className="text-2xl font-black text-slate-900 tracking-tight">
+                                List New Vehicle
+                            </h1>
+                        </div>
+
+                        <Link
+                            href={route("admin.cars.index")}
+                            className="group flex items-center gap-2 px-4 py-2 text-sm font-bold text-slate-600 hover:text-primary transition-all"
+                        >
+                            <ChevronLeft
+                                size={18}
+                                className="group-hover:-translate-x-1 transition-transform"
+                            />
+                            Back to Inventory
+                        </Link>
                     </div>
-                    <Link
-                        href={route("admin.cars.index")}
-                        className="flex items-center gap-2 px-4 py-2 bg-indigo-50 text-indigo-700 rounded-lg font-medium hover:bg-indigo-100 transition"
-                    >
-                        <ChevronLeft size={18} /> Go Back
-                    </Link>
                 </div>
 
                 <form
                     onSubmit={handleSubmit}
-                    className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-8xl mx-auto"
+                    className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 px-8 py-10"
                 >
-                    {/* Left Side */}
-                    <div className="lg:col-span-2 space-y-8">
+                    {/* Left Column: Core Data (8 Cols) */}
+                    <div className="lg:col-span-8 space-y-8">
                         <CollapsibleCard
-                            title="Basic Information"
-                            icon={<Car size={18} />}
+                            title="Primary Details"
                             isOpen={openSections.basic}
                             onToggle={() => toggleSection("basic")}
                         >
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                                <div className="space-y-2">
-                                    <Label required>Brand</Label>
-                                    <select
-                                        className={`w-full h-10 border ${
-                                            errors.brand_id
-                                                ? "border-red-500"
-                                                : "border-gray-200"
-                                        } rounded-md px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none`}
-                                        value={data.brand_id}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "brand_id",
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        <option value="">Select Brand</option>
-                                        {brands?.map((b) => (
-                                            <option key={b.id} value={b.id}>
-                                                {b.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.brand_id && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.brand_id}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="space-y-2">
-                                    <Label required>Category</Label>
-                                    <select
-                                        className={`w-full h-10 border ${
-                                            errors.category_id
-                                                ? "border-red-500"
-                                                : "border-gray-200"
-                                        } rounded-md px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none`}
-                                        value={data.category_id}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "category_id",
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        <option value="">
-                                            Select Category
-                                        </option>
-                                        {categories?.map((c) => (
-                                            <option key={c.id} value={c.id}>
-                                                {c.name}
-                                            </option>
-                                        ))}
-                                    </select>
-                                    {errors.category_id && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.category_id}
-                                        </p>
-                                    )}
-                                </div>
-                                <Input
-                                    label={
-                                        <span>
-                                            Make{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Toyota"
-                                    value={data.make}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "make",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.make}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Model{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Camry"
-                                    value={data.model}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "model",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.model}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Year{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="number"
-                                    min="1950"
-                                    max={new Date().getFullYear() + 5}
-                                    value={data.year}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "year",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.year}
-                                />
-                                <div className="space-y-2">
-                                    <Label required>Rental Type</Label>
-                                    <select
-                                        className={`w-full h-10 border ${
-                                            errors.rental_type
-                                                ? "border-red-500"
-                                                : "border-gray-200"
-                                        } rounded-md px-3 text-sm focus:ring-2 focus:ring-orange-500 outline-none`}
-                                        value={data.rental_type}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "rental_type",
-                                                e.target.value
-                                            )
-                                        }
-                                    >
-                                        <option value="daily">Daily</option>
-                                        <option value="weekly">Weekly</option>
-                                        <option value="monthly">Monthly</option>
-                                    </select>
-                                    {errors.rental_type && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.rental_type}
-                                        </p>
-                                    )}
-                                </div>
-                                <div className="md:col-span-2">
-                                    <Input
-                                        label={
-                                            <span>
-                                                Description{" "}
-                                                <span className="text-red-500">
-                                                    *
-                                                </span>
-                                            </span>
-                                        }
-                                        isTextArea
-                                        rows={3}
-                                        placeholder="Car details..."
-                                        value={data.description}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "description",
-                                                e.target.value
-                                            )
-                                        }
-                                        error={errors.description}
-                                    />
-                                </div>
-                            </div>
+                            <BasicInfoSection
+                                data={data}
+                                errors={errors}
+                                handleInputChange={handleInputChange}
+                                brands={brands}
+                                categories={categories}
+                            />
                         </CollapsibleCard>
 
                         <CollapsibleCard
-                            title="Technical Specifications"
-                            icon={<Settings size={18} />}
+                            title="Technical Specs"
                             isOpen={openSections.specs}
                             onToggle={() => toggleSection("specs")}
                         >
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                <Input
-                                    label={
-                                        <span>
-                                            Transmission{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Auto"
-                                    value={data.transmission}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "transmission",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.transmission}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Mileage{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="12 km/L"
-                                    value={data.mileage}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "mileage",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.mileage}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Fuel Type{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Petrol"
-                                    value={data.fuel_type}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "fuel_type",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.fuel_type}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Steering{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Power"
-                                    value={data.steering}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "steering",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.steering}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Model Year{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="number"
-                                    value={data.model_year}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "model_year",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.model_year}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Vehicle Type{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="Sedan"
-                                    value={data.vehicle_type}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "vehicle_type",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.vehicle_type}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Engine (cc){" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="2000"
-                                    value={data.engine_capacity}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "engine_capacity",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.engine_capacity}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Color{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="White"
-                                    value={data.color}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "color",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.color}
-                                />
-                            </div>
+                            <TechSpecsSection
+                                data={data}
+                                errors={errors}
+                                handleInputChange={handleInputChange}
+                            />
                         </CollapsibleCard>
 
                         <CollapsibleCard
-                            title="Car Features"
-                            icon={<Plus size={18} />}
+                            title="Vehicle Features"
                             isOpen={openSections.features}
                             onToggle={() => toggleSection("features")}
                         >
-                            <div className="space-y-4">
-                                {data.features.map((f, i) => (
-                                    <div key={i} className="flex gap-3">
-                                        <Input
-                                            className="flex-1"
-                                            placeholder="Feature Name"
-                                            value={f.feature_name}
-                                            onChange={(e) =>
-                                                handleNestedChange(
-                                                    "features",
-                                                    i,
-                                                    "feature_name",
-                                                    e.target.value
-                                                )
-                                            }
-                                            error={
-                                                errors[
-                                                    `features.${i}.feature_name`
-                                                ]
-                                            }
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() =>
-                                                removeRow("features", i)
-                                            }
-                                            className="text-red-400 p-2 hover:text-red-600"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    </div>
-                                ))}
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        addRow("features", { feature_name: "" })
-                                    }
-                                    className="text-orange-500 font-semibold flex items-center gap-2 hover:text-orange-600"
-                                >
-                                    <Plus size={16} /> Add Feature
-                                </button>
-                                {errors.features && (
-                                    <p className="text-red-500 text-xs">
-                                        {typeof errors.features === "string"
-                                            ? errors.features
-                                            : "Please add at least one feature"}
-                                    </p>
-                                )}
-                            </div>
+                            <FeaturesSection
+                                data={data}
+                                errors={errors}
+                                handleNestedChange={handleNestedChange}
+                                removeRow={removeRow}
+                                addRow={addRow}
+                            />
                         </CollapsibleCard>
 
                         <CollapsibleCard
-                            title="FAQs"
-                            icon={<HelpCircle size={18} />}
+                            title="Customer FAQs"
                             isOpen={openSections.faqs}
                             onToggle={() => toggleSection("faqs")}
                         >
-                            <div className="space-y-5">
-                                {data.faqs.map((faq, i) => (
-                                    <div
-                                        key={i}
-                                        className="p-4 border bg-gray-50 rounded-lg space-y-3"
-                                    >
-                                        <Input
-                                            label="Question"
-                                            value={faq.question}
-                                            onChange={(e) =>
-                                                handleNestedChange(
-                                                    "faqs",
-                                                    i,
-                                                    "question",
-                                                    e.target.value
-                                                )
-                                            }
-                                            error={errors[`faqs.${i}.question`]}
-                                        />
-                                        <Input
-                                            label="Answer"
-                                            isTextArea
-                                            rows={2}
-                                            value={faq.answer}
-                                            onChange={(e) =>
-                                                handleNestedChange(
-                                                    "faqs",
-                                                    i,
-                                                    "answer",
-                                                    e.target.value
-                                                )
-                                            }
-                                            error={errors[`faqs.${i}.answer`]}
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeRow("faqs", i)}
-                                            className="text-red-500 text-xs flex items-center gap-1 hover:text-red-700"
-                                        >
-                                            <Trash2 size={14} /> Remove
-                                        </button>
-                                    </div>
-                                ))}
-                                <button
-                                    type="button"
-                                    onClick={() =>
-                                        addRow("faqs", {
-                                            question: "",
-                                            answer: "",
-                                        })
-                                    }
-                                    className="text-orange-500 font-semibold flex items-center gap-2 hover:text-orange-600"
-                                >
-                                    <Plus size={16} /> Add FAQ
-                                </button>
-                                {errors.faqs && (
-                                    <p className="text-red-500 text-xs">
-                                        {errors.faqs}
-                                    </p>
-                                )}
-                            </div>
+                            <FaqSection
+                                data={data}
+                                errors={errors}
+                                handleNestedChange={handleNestedChange}
+                                removeRow={removeRow}
+                                addRow={addRow}
+                            />
                         </CollapsibleCard>
                     </div>
 
-                    {/* Right Side */}
-                    <div className="space-y-8">
+                    {/* Right Column: Pricing & Meta (4 Cols) */}
+                    <div className="lg:col-span-4 space-y-8">
                         <CollapsibleCard
-                            title="Pricing & Fees"
-                            icon={<DollarSign size={18} />}
+                            title="Pricing Strategy"
                             isOpen={openSections.pricing}
                             onToggle={() => toggleSection("pricing")}
                         >
-                            <div className="space-y-4">
-                                <Input
-                                    label={
-                                        <span>
-                                            Daily Rate{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    value={data.daily_rate}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "daily_rate",
-                                            parseFloat(e.target.value) || 0
-                                        )
-                                    }
-                                    error={errors.daily_rate}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Weekly Rate{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    value={data.weekly_rate}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "weekly_rate",
-                                            parseFloat(e.target.value) || 0
-                                        )
-                                    }
-                                    error={errors.weekly_rate}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Monthly Rate{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                    value={data.monthly_rate}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "monthly_rate",
-                                            parseFloat(e.target.value) || 0
-                                        )
-                                    }
-                                    error={errors.monthly_rate}
-                                />
-                                <div className="grid grid-cols-2 gap-3">
-                                    <Input
-                                        label={
-                                            <span>
-                                                Tax %{" "}
-                                                <span className="text-red-500">
-                                                    *
-                                                </span>
-                                            </span>
-                                        }
-                                        type="number"
-                                        step="0.01"
-                                        min="0"
-                                        value={data.tax_percentage}
-                                        onChange={(e) =>
-                                            handleInputChange(
-                                                "tax_percentage",
-                                                parseFloat(e.target.value) || 0
-                                            )
-                                        }
-                                        error={errors.tax_percentage}
-                                    />
-                                    <div className="space-y-2">
-                                        <Label required>Currency</Label>
-                                        <select
-                                            className={`w-full h-10 border ${
-                                                errors.currency
-                                                    ? "border-red-500"
-                                                    : "border-gray-200"
-                                            } rounded-md px-3 text-sm outline-none`}
-                                            value={data.currency}
-                                            onChange={(e) =>
-                                                handleInputChange(
-                                                    "currency",
-                                                    e.target.value
-                                                )
-                                            }
-                                        >
-                                            <option value="USD">USD</option>
-                                            <option value="BDT">BDT</option>
-                                            <option value="EUR">EUR</option>
-                                        </select>
-                                        {errors.currency && (
-                                            <p className="text-red-500 text-xs">
-                                                {errors.currency}
-                                            </p>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
+                            <PricingSection
+                                data={data}
+                                errors={errors}
+                                handleInputChange={handleInputChange}
+                            />
                         </CollapsibleCard>
 
                         <CollapsibleCard
-                            title="Legal Documents"
-                            icon={<ShieldCheck size={18} />}
+                            title="Legal & Compliance"
                             isOpen={openSections.documents}
                             onToggle={() => toggleSection("documents")}
                         >
-                            <div className="space-y-4">
-                                <Input
-                                    label={
-                                        <span>
-                                            Registration No{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="ABC-123"
-                                    value={data.registration_number}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "registration_number",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.registration_number}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Chassis No{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="CH123456789"
-                                    value={data.chassis_number}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "chassis_number",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.chassis_number}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Engine No{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    placeholder="EN123456789"
-                                    value={data.engine_number}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "engine_number",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.engine_number}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Tax Expiry{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="date"
-                                    value={data.tax_token_expiry}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "tax_token_expiry",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.tax_token_expiry}
-                                />
-                                <Input
-                                    label={
-                                        <span>
-                                            Fitness Expiry{" "}
-                                            <span className="text-red-500">
-                                                *
-                                            </span>
-                                        </span>
-                                    }
-                                    type="date"
-                                    value={data.fitness_expiry}
-                                    onChange={(e) =>
-                                        handleInputChange(
-                                            "fitness_expiry",
-                                            e.target.value
-                                        )
-                                    }
-                                    error={errors.fitness_expiry}
-                                />
-                            </div>
+                            <DocumentsSection
+                                data={data}
+                                errors={errors}
+                                handleInputChange={handleInputChange}
+                            />
                         </CollapsibleCard>
 
                         <CollapsibleCard
-                            title="Gallery Images"
-                            icon={<ImageIcon size={18} />}
+                            title="Media Gallery"
                             isOpen={openSections.images}
                             onToggle={() => toggleSection("images")}
                         >
-                            <FileUpload
-                                field="images"
-                                label="Upload images (min 1 required)"
-                                multiple={true}
-                                accept="image/*"
-                                maxFiles={10}
+                            <GallerySection
                                 data={data}
-                                setData={setData}
                                 errors={errors}
+                                setData={setData}
                                 clearErrors={clearErrors}
                             />
-
-                            {errors["images.*"] && (
-                                <p className="text-red-500 text-xs mt-2">
-                                    {errors["images.*"]}
-                                </p>
-                            )}
                         </CollapsibleCard>
 
-                        <div className="flex justify-end gap-3">
-                            <Link
-                                href={route("admin.cars.index")}
-                                className="flex items-center gap-2 px-6 py-3 border rounded-md text-gray-500 font-semibold hover:bg-gray-50"
-                            >
-                                <XCircle size={18} /> Cancel
-                            </Link>
-                            <button
-                                type="submit"
-                                disabled={processing}
-                                className="flex items-center gap-2 px-7 py-3 bg-orange-500 text-white font-bold rounded-md hover:bg-orange-600 disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                                {processing ? (
-                                    "Saving..."
-                                ) : (
-                                    <>
-                                        <Save size={18} /> Save Car
-                                    </>
-                                )}
-                            </button>
+                        {/* Floating Action Bar (Mobile Responsive) */}
+                        <div className="bg-slate-900 rounded-3xl p-6 shadow-2xl shadow-slate-200">
+                            <div className="text-white mb-6">
+                                <h4 className="font-bold text-lg">
+                                    Ready to publish?
+                                </h4>
+                                <p className="text-slate-400 text-xs">
+                                    Ensure all required legal documents are
+                                    valid before listing.
+                                </p>
+                            </div>
+                            <div className="flex flex-col gap-3">
+                                <button
+                                    type="submit"
+                                    disabled={processing}
+                                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-primary text-white font-black rounded-2xl hover:bg-primary/90 disabled:opacity-50 transition-all shadow-lg shadow-primary/20"
+                                >
+                                    <Save size={20} />
+                                    {processing
+                                        ? "PUBLISHING..."
+                                        : "PUBLISH LISTING"}
+                                </button>
+                                <Link
+                                    href={route("admin.cars.index")}
+                                    className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-slate-800 text-slate-300 font-bold rounded-2xl hover:bg-slate-700 transition-all"
+                                >
+                                    <XCircle size={18} />
+                                    Discard Draft
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </form>
             </div>
         </AdminLayout>
-    );
-}
-
-// CollapsibleCard Component unchanged
-function CollapsibleCard({ title, icon, children, isOpen, onToggle }) {
-    return (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-            <div
-                className="p-5 flex justify-between items-center cursor-pointer hover:bg-gray-50 border-b"
-                onClick={onToggle}
-            >
-                <div className="flex items-center gap-3 text-slate-800 font-bold">
-                    <div className="p-2 text-orange-500 bg-orange-50 rounded-lg">
-                        {icon}
-                    </div>
-                    <span className="text-lg">{title}</span>
-                </div>
-                {isOpen ? (
-                    <ChevronUp size={20} className="text-gray-400" />
-                ) : (
-                    <ChevronDown size={20} className="text-gray-400" />
-                )}
-            </div>
-            {isOpen && <div className="p-6">{children}</div>}
-        </div>
     );
 }

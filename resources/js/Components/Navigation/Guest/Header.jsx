@@ -36,7 +36,7 @@ export default function Header() {
                             </svg>
                         </div>
                         <h1 className="text-xl font-black tracking-tighter flex items-center">
-                            <span className="text-orange-500">CAR</span>
+                            <span className="text-secondary">CAR</span>
                             <span className="text-white ml-1">RENT</span>
                         </h1>
                     </Link>
@@ -49,8 +49,8 @@ export default function Header() {
                                 href={link.href}
                                 className={`text-[15px] font-medium transition-colors flex items-center gap-1.5 group ${
                                     link.name === "Home"
-                                        ? "text-orange-500"
-                                        : "text-gray-300 hover:text-orange-500"
+                                        ? "text-secondary"
+                                        : "text-gray-300 hover:text-secondary"
                                 }`}
                             >
                                 {link.name}
@@ -77,13 +77,13 @@ export default function Header() {
                         <div className="hidden sm:flex items-center gap-3">
                             <Link
                                 href="/login"
-                                className="text-gray-200 px-4 py-2 text-sm font-semibold hover:text-orange-500 transition-colors"
+                                className="text-gray-200 px-4 py-2 text-sm font-semibold hover:text-secondary transition-colors"
                             >
                                 Sign In
                             </Link>
                             <Link
                                 href="/register"
-                                className="bg-orange-500 text-white px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-orange-600 transition-all shadow-lg active:scale-95"
+                                className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-secondary/90 transition-all shadow-lg active:scale-95"
                             >
                                 Sign Up
                             </Link>
@@ -135,7 +135,7 @@ export default function Header() {
                             key={link.name}
                             href={link.href}
                             onClick={() => setIsMenuOpen(false)}
-                            className="block px-3 py-4 text-base font-medium text-gray-300 hover:text-orange-500 border-b border-gray-800/50"
+                            className="block px-3 py-4 text-base font-medium text-gray-300 hover:text-secondary border-b border-gray-800/50"
                         >
                             {link.name}
                         </Link>
@@ -153,7 +153,7 @@ export default function Header() {
                         <Link
                             href="/register"
                             onClick={() => setIsMenuOpen(false)}
-                            className="w-full bg-orange-500 text-white px-5 py-3 rounded-lg font-bold text-center"
+                            className="w-full bg-secondary text-secondary-foreground px-5 py-3 rounded-lg font-bold text-center"
                         >
                             Sign Up
                         </Link>

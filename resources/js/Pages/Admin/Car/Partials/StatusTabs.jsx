@@ -16,7 +16,7 @@ export default function StatusTabs({
                     onClick={() => handleTabChange(tab)}
                     className={`py-4 transition-colors relative font-medium capitalize whitespace-nowrap ${
                         currentStatus === tab
-                            ? "text-blue-500"
+                            ? "text-primary"
                             : "text-slate-500 hover:text-slate-700"
                     }`}
                 >
@@ -25,7 +25,7 @@ export default function StatusTabs({
                     {currentStatus === tab && (
                         <motion.div
                             layoutId="activeTabUnderline"
-                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-blue-500"
+                            className="absolute bottom-0 left-0 right-0 h-[2px] bg-primary"
                             transition={{
                                 type: "spring",
                                 stiffness: 380,

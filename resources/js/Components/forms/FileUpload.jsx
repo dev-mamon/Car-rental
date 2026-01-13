@@ -85,15 +85,13 @@ const FileUpload = ({
                 />
 
                 <div className="flex flex-col items-center justify-center text-center">
-                    <div className="mb-4 p-4 bg-white border border-slate-100 shadow-sm rounded-2xl text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300">
+                    <div className="mb-4 p-4 bg-white border border-slate-100 shadow-sm rounded-2xl text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
                         <Upload size={24} strokeWidth={2.5} />
                     </div>
 
                     <p className="text-[15px] font-semibold text-slate-800">
                         Drop your image here, or{" "}
-                        <span className="text-orange-600 font-bold">
-                            browse
-                        </span>
+                        <span className="text-primary font-bold">browse</span>
                     </p>
                     <p className="text-xs font-medium text-slate-400 mt-1.5 flex items-center gap-2">
                         <span>JPEG, PNG, JPG, WEBP</span>

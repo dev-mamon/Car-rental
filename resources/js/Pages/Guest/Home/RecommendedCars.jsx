@@ -217,7 +217,7 @@ export default function RecommendedCars() {
                                     <div>
                                         <div className="flex justify-between items-start mb-4">
                                             <div className="flex-1">
-                                                <h3 className="text-lg font-bold text-slate-800 group-hover:text-orange-600 transition-colors line-clamp-1">
+                                                <h3 className="text-lg font-bold text-slate-800 group-hover:text-primary transition-colors line-clamp-1">
                                                     {car.name}
                                                 </h3>
                                                 <div className="flex items-center gap-1 mt-1.5">
@@ -296,7 +296,7 @@ export default function RecommendedCars() {
 function FeatureItem({ icon, label }) {
     return (
         <div className="flex flex-col items-center gap-2">
-            <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors">
+            <div className="w-9 h-9 rounded-xl bg-slate-50 flex items-center justify-center text-slate-500 group-hover:bg-orange-50 group-hover:text-primary transition-colors">
                 {icon}
             </div>
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight text-center truncate w-full px-1">

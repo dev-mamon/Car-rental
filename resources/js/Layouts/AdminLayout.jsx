@@ -36,7 +36,7 @@ export default function AdminLayout({ children }) {
                 {/* Mobile Close Button */}
                 <button
                     onClick={() => setIsCollapsed(!isCollapsed)}
-                    className="hidden lg:flex absolute -right-3 top-6 z-[70] w-6 h-6 bg-orange-500 text-white rounded-full items-center justify-center shadow-md hover:bg-orange-600 transition-all"
+                    className="hidden lg:flex absolute -right-3 top-6 z-[70] w-6 h-6 bg-blue-600 text-secondary-foreground rounded-full items-center justify-center shadow-md hover:bg-blue/90 transition-all"
                 >
                     <ChevronLeft
                         size={14}

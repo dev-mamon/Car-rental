@@ -399,7 +399,7 @@ export default function CarEdit({ auth, categories, brands, car }) {
                                     onClick={() =>
                                         addRow("features", { feature_name: "" })
                                     }
-                                    className="text-orange-500 font-semibold"
+                                    className="text-secondary font-semibold"
                                 >
                                     + Add Feature
                                 </button>
@@ -462,7 +462,7 @@ export default function CarEdit({ auth, categories, brands, car }) {
                                             answer: "",
                                         })
                                     }
-                                    className="text-orange-500 font-semibold flex items-center gap-2 hover:text-orange-600"
+                                    className="text-secondary font-semibold flex items-center gap-2 hover:text-secondary/90"
                                 >
                                     <Plus size={16} /> Add FAQ
                                 </button>
@@ -767,7 +767,7 @@ export default function CarEdit({ auth, categories, brands, car }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="flex items-center gap-2 px-7 py-3 bg-orange-500 text-white font-bold rounded-md"
+                                className="flex items-center gap-2 px-7 py-3 bg-secondary text-secondary-foreground font-bold rounded-md"
                             >
                                 {processing ? "Updating..." : "Update Car"}
                             </button>
@@ -787,7 +787,7 @@ function CollapsibleCard({ title, icon, children, isOpen, onToggle }) {
                 onClick={onToggle}
             >
                 <div className="flex items-center gap-3 text-slate-800 font-bold">
-                    <div className="p-2 text-orange-500 bg-orange-50 rounded-lg">
+                    <div className="p-2 text-secondary bg-secondary/10 rounded-lg">
                         {icon}
                     </div>
                     <span className="text-lg">{title}</span>

@@ -2,22 +2,22 @@
 
 namespace Database\Seeders;
 
+use App\Helpers\Helper;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 
 class CarSeeder extends Seeder
 {
     public function run(): void
     {
-        $total = 5000;
-        $chunkSize = 100; // প্রতি ব্যাচে ১০০টি করে ডাটা প্রসেস হবে
+        $total = 80;
+        $chunkSize = 5;
 
         for ($i = 1; $i <= $total; $i++) {
 
-            // ১. কার ইনসার্ট
             $carId = DB::table('cars')->insertGetId([
                 'brand_id' => rand(1, 5),
                 'category_id' => rand(1, 4),
@@ -26,73 +26,12 @@ class CarSeeder extends Seeder
                 'year' => rand(2019, 2024),
                 'rental_type' => 'daily',
                 'description' => 'This vehicle is well-maintained and designed to provide a smooth, comfortable, and reliable driving experience.',
+                'status' => 'available',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
 
-            // ২. স্পেসিফিকেশন
-            DB::table('car_specifications')->insert([
-                'car_id' => $carId,
-                'transmission' => 'Automatic',
-                'mileage' => '12 km/l',
-                'fuel_type' => 'Petrol',
-                'steering' => 'Power',
-                'model_year' => 2022,
-                'vehicle_type' => 'Sedan',
-                'engine_capacity' => '1800cc',
-                'color' => 'White',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // ৩. প্রাইস ডিটেইলস
-            DB::table('car_price_details')->insert([
-                'car_id' => $carId,
-                'daily_rate' => rand(40, 120),
-                'weekly_rate' => rand(250, 800),
-                'monthly_rate' => rand(900, 3000),
-                'security_deposit' => rand(200, 800),
-                'tax_percentage' => 5,
-                'currency' => 'USD',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // ৪. পুলিশ ডকুমেন্ট
-            DB::table('car_police_documents')->insert([
-                'car_id' => $carId,
-                'registration_number' => 'DHA-'.(1000 + $i),
-                'chassis_number' => 'CHS-'.strtoupper(uniqid()),
-                'engine_number' => 'ENG-'.strtoupper(uniqid()),
-                'tax_token_expiry' => now()->addYears(2),
-                'fitness_expiry' => now()->addYears(2),
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]);
-
-            // ৫. ফিচারস (Batch Insert - লুপের বাইরে একবারে)
-            $features = ['Air Conditioning', 'ABS', 'Airbags'];
-            $featuresData = [];
-            foreach ($features as $feature) {
-                $featuresData[] = [
-                    'car_id' => $carId,
-                    'feature_name' => $feature,
-                    'created_at' => now(),
-                    'updated_at' => now(),
-                ];
-            }
-            DB::table('car_features')->insert($featuresData);
-
-            // ৬. FAQ (Batch Insert)
-            DB::table('car_f_a_q_s')->insert([
-                ['car_id' => $carId, 'question' => 'Is driver included?', 'answer' => 'Driver available on request.', 'created_at' => now(), 'updated_at' => now()],
-                ['car_id' => $carId, 'question' => 'Is fuel included?', 'answer' => 'Fuel cost is not included.', 'created_at' => now(), 'updated_at' => now()],
-            ]);
-
-            // ৭. ইমেজ আপলোড পার্ট
-            $folderName = 'cars/gallery';
-            $uploadPath = public_path('uploads/'.$folderName);
-            File::ensureDirectoryExists($uploadPath);
+            $this->insertRelatedData($carId, $i);
 
             $allImages = [
                 'pexels-bylukemiller-34985779.jpg', 'pexels-denniz-futalan-339724-13118999.jpg',
@@ -109,35 +48,77 @@ class CarSeeder extends Seeder
                 'pexels-wolfart-10822041.jpg',
             ];
 
-            $selectedImages = Arr::random($allImages, 8);
-            $imagesData = [];
+            $selectedImages = Arr::random($allImages, 3);
 
-            foreach ($selectedImages as $img) {
-                $sourcePath = public_path('images/cars/'.$img);
+            foreach ($selectedImages as $imgName) {
+                $sourcePath = public_path('images/cars/'.$imgName);
+
                 if (File::exists($sourcePath)) {
-                    $extension = pathinfo($img, PATHINFO_EXTENSION);
-                    $newFileName = microtime(true).'_'.Str::random(8).'.'.$extension;
+                    $file = new UploadedFile(
+                        $sourcePath,
+                        $imgName,
+                        mime_content_type($sourcePath),
+                        null,
+                        true
+                    );
 
-                    File::copy($sourcePath, $uploadPath.'/'.$newFileName);
+                    $uploadData = Helper::uploadFile($file, 'cars/gallery', true);
 
-                    $imagesData[] = [
-                        'car_id' => $carId,
-                        'file_path' => 'uploads/'.$folderName.'/'.$newFileName,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
+                    if ($uploadData) {
+                        DB::table('car_images')->insert([
+                            'car_id' => $carId,
+                            'file_path' => $uploadData['original'],
+                            'thumbnail_path' => $uploadData['thumbnail'],
+                            'created_at' => now(),
+                            'updated_at' => now(),
+                        ]);
+                    }
                 }
             }
 
-            // ইমেজগুলো একবারে ইনসার্ট করা হচ্ছে (Batch)
-            if (! empty($imagesData)) {
-                DB::table('car_images')->insert($imagesData);
-            }
-
-            // কনসোলে প্রোগ্রেস দেখার জন্য (ঐচ্ছিক)
             if ($i % $chunkSize == 0) {
-                $this->command->info("Inserted $i cars...");
+                $this->command->info("Inserted $i cars with optimized WebP images...");
             }
         }
+    }
+
+    private function insertRelatedData($carId, $i)
+    {
+        // Specifications
+        DB::table('car_specifications')->insert([
+            'car_id' => $carId,
+            'transmission' => 'Automatic',
+            'mileage' => '12 km/l',
+            'fuel_type' => 'Petrol',
+            'steering' => 'Power',
+            'model_year' => 2022,
+            'vehicle_type' => 'Sedan',
+            'engine_capacity' => '1800cc',
+            'color' => 'White',
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+
+        // Pricing
+        DB::table('car_price_details')->insert([
+            'car_id' => $carId,
+            'daily_rate' => rand(40, 120),
+            'weekly_rate' => rand(250, 800),
+            'monthly_rate' => rand(900, 3000),
+            'security_deposit' => rand(200, 800),
+            'tax_percentage' => 5,
+            'currency' => 'USD',
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
+
+        // Documents
+        DB::table('car_police_documents')->insert([
+            'car_id' => $carId,
+            'registration_number' => 'DHA-'.(1000 + $i).rand(10, 99),
+            'chassis_number' => 'CHS-'.strtoupper(uniqid()),
+            'engine_number' => 'ENG-'.strtoupper(uniqid()),
+            'tax_token_expiry' => now()->addYears(2),
+            'fitness_expiry' => now()->addYears(2),
+            'created_at' => now(), 'updated_at' => now(),
+        ]);
     }
 }

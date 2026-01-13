@@ -23,8 +23,7 @@ class CarController extends Controller
         $query = Car::with([
             'brand:id,name',
             'priceDetails:id,car_id,daily_rate',
-            // Only select necessary columns from images
-            'images:id,car_id,file_path',
+            'images:id,car_id,file_path,thumbnail_path',
         ]);
 
         // 2. Search Logic
@@ -38,10 +37,10 @@ class CarController extends Controller
 
         // 3. Brand & Category Filters
         if ($request->brand) {
-            $query->whereHas('brand', fn($q) => $q->where('name', $request->brand));
+            $query->whereHas('brand', fn ($q) => $q->where('name', $request->brand));
         }
         if ($request->category) {
-            $query->whereHas('category', fn($q) => $q->where('name', $request->category));
+            $query->whereHas('category', fn ($q) => $q->where('name', $request->category));
         }
         if ($request->status && $request->status !== 'all') {
             $query->where('status', $request->status);
@@ -49,10 +48,10 @@ class CarController extends Controller
 
         // 4. Specification Filters (only use whereHas, don't eager load)
         if ($request->transmission) {
-            $query->whereHas('specifications', fn($q) => $q->where('transmission', $request->transmission));
+            $query->whereHas('specifications', fn ($q) => $q->where('transmission', $request->transmission));
         }
         if ($request->fuel_type) {
-            $query->whereHas('specifications', fn($q) => $q->where('fuel_type', $request->fuel_type));
+            $query->whereHas('specifications', fn ($q) => $q->where('fuel_type', $request->fuel_type));
         }
 
         // 5. Execute Pagination
@@ -89,7 +88,7 @@ class CarController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                // 1. Create primary car record
+                // 1. Create orange-600 car record
                 $car = Car::create($request->only([
                     'brand_id',
                     'category_id',
@@ -157,8 +156,15 @@ class CarController extends Controller
                 // 7. Handle Image Uploads
                 if ($request->hasFile('images')) {
                     foreach ($request->file('images') as $image) {
-                        $path = Helper::uploadFile($image, 'cars/gallery');
-                        $car->images()->create(['file_path' => $path]);
+
+                        $uploadData = Helper::uploadFile($image, 'cars/gallery', true);
+
+                        if ($uploadData) {
+                            $car->images()->create([
+                                'file_path' => $uploadData['original'],
+                                'thumbnail_path' => $uploadData['thumbnail'] ?? $uploadData['original'],
+                            ]);
+                        }
                     }
                 }
             });
@@ -170,12 +176,6 @@ class CarController extends Controller
                 ->route('admin.cars.index')
                 ->with('success', 'Vehicle listed successfully in the marketplace.');
         } catch (\Exception $e) {
-            Log::info('Error details:', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-                'request' => $request->all(),
-            ]);
-
             return back()
                 ->withInput()
                 ->withErrors(['error' => 'Failed to create car. Please check logs.']);
@@ -198,7 +198,7 @@ class CarController extends Controller
     {
         try {
             DB::transaction(function () use ($request, $car) {
-                // 1. Update primary car record
+                // 1. Update orange-600 car record
                 $car->update($request->only([
                     'brand_id',
                     'category_id',
@@ -244,7 +244,7 @@ class CarController extends Controller
                 // 5. Update Features
                 $car->features()->delete();
                 if ($request->has('features')) {
-                    $features = array_filter($request->features, fn($f) => ! empty($f['feature_name']));
+                    $features = array_filter($request->features, fn ($f) => ! empty($f['feature_name']));
                     if (! empty($features)) {
                         $car->features()->createMany($features);
                     }
@@ -253,7 +253,7 @@ class CarController extends Controller
                 // 6. Update FAQs
                 $car->faqs()->delete();
                 if ($request->has('faqs')) {
-                    $faqs = array_filter($request->faqs, fn($f) => ! empty($f['question']));
+                    $faqs = array_filter($request->faqs, fn ($f) => ! empty($f['question']));
                     if (! empty($faqs)) {
                         $car->faqs()->createMany($faqs);
                     }
@@ -275,7 +275,7 @@ class CarController extends Controller
 
             return redirect()->route('admin.cars.index')->with('success', 'Vehicle updated successfully.');
         } catch (\Exception $e) {
-            Log::error('Car Update Error: ' . $e->getMessage());
+            Log::error('Car Update Error: '.$e->getMessage());
 
             return back()->withErrors(['error' => 'Update failed. Check logs for details.']);
         }
@@ -328,7 +328,7 @@ class CarController extends Controller
             return redirect()->route('admin.cars.index')
                 ->with('success', 'Vehicle and all related data deleted successfully.');
         } catch (\Exception $e) {
-            Log::error('Car Deletion Error: ' . $e->getMessage());
+            Log::error('Car Deletion Error: '.$e->getMessage());
 
             return back()->withErrors([
                 'error' => 'Failed to delete vehicle. Please try again.',

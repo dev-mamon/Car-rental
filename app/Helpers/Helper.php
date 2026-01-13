@@ -5,29 +5,53 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use Intervention\Image\Drivers\Gd\Driver;
+use Intervention\Image\ImageManager;
 
 class Helper
 {
     /**
      * Upload a file to public/uploads directory
      */
-    public static function uploadFile($file, $folder = 'uploads'): ?string
+    public static function uploadFile($file, $folder = 'cars', $withThumb = true): ?array
     {
         try {
             if (! $file || ! $file->isValid()) {
                 throw new \Exception('Invalid file');
             }
 
-            $path = public_path("uploads/$folder");
-            File::ensureDirectoryExists($path);
+            $basePath = "uploads/$folder";
+            $fullPath = public_path($basePath);
+            File::ensureDirectoryExists($fullPath);
 
-            // Generate unique filename
-            $name = time().'_'.Str::random(8).'.'.$file->getClientOriginalExtension();
+            // ইউনিক নাম তৈরি
+            $filename = time().'_'.Str::random(8).'.webp';
 
-            // Use store() method instead of move()
-            $file->move($path, $name);
+            $manager = new ImageManager(new Driver);
+            $image = $manager->read($file);
 
-            return "uploads/$folder/$name";
+            $image->scale(width: 1200)
+                ->toWebp(80)
+                ->save($fullPath.'/'.$filename);
+
+            $result = [
+                'original' => "$basePath/$filename",
+                'thumbnail' => null,
+            ];
+
+            // thumbnail save
+            if ($withThumb) {
+                $thumbPath = public_path("$basePath/thumbs");
+                File::ensureDirectoryExists($thumbPath);
+
+                $image->cover(80, 80)
+                    ->toWebp(50)
+                    ->save($thumbPath.'/'.$filename);
+
+                $result['thumbnail'] = "$basePath/thumbs/$filename";
+            }
+
+            return $result;
 
         } catch (\Exception $e) {
             Log::error('File upload error: '.$e->getMessage());

@@ -45,7 +45,7 @@ export default function Error404() {
                         {/* Primary Button: Go Back */}
                         <button
                             onClick={handleGoBack}
-                            className="group relative bg-orange-500 w-full inline-flex items-center justify-center px-8 py-4 text-white font-bold rounded-2xl overflow-hidden transition-all duration-300 hover:bg-black hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] active:scale-[0.98]"
+                            className="group relative bg-secondary w-full inline-flex items-center justify-center px-8 py-4 text-secondary-foreground font-bold rounded-2xl overflow-hidden transition-all duration-300 hover:bg-black hover:-translate-y-1 hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)] active:scale-[0.98]"
                         >
                             {/* Arrow Animation */}
                             <svg
@@ -67,10 +67,10 @@ export default function Error404() {
                         {/* Secondary Button: Home Link */}
                         <Link
                             href="/"
-                            className="inline-flex items-center justify-center text-sm font-bold text-gray-400 hover:text-indigo-600 transition-all duration-200 py-2 group"
+                            className="inline-flex items-center justify-center text-sm font-bold text-gray-400 hover:text-primary transition-all duration-200 py-2 group"
                         >
                             Or return to
-                            <span className="ml-1 border-b-2 border-transparent group-hover:border-indigo-600 transition-all">
+                            <span className="ml-1 border-b-2 border-transparent group-hover:border-primary transition-all">
                                 Homepage
                             </span>
                             <svg

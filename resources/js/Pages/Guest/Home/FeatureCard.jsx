@@ -11,10 +11,10 @@ import {
 const FeatureCard = ({ icon: Icon, title }) => (
     <div className="group relative bg-white p-6 rounded-2xl flex items-center gap-4 transition-all duration-300 border border-gray-100 cursor-pointer overflow-hidden">
         {/* Hover Border Gradient Effect */}
-        <div className="absolute inset-0 border-2 border-transparent group-hover:border-[#147a81] transition-all duration-500 rounded-2xl [mask-image:linear-gradient(135deg,black_30%,transparent_90%)] opacity-0 group-hover:opacity-100 pointer-events-none"></div>
+        <div className="absolute inset-0 border-2 border-transparent group-hover:border-primary transition-all duration-500 rounded-2xl [mask-image:linear-gradient(135deg,black_30%,transparent_90%)] opacity-0 group-hover:opacity-100 pointer-events-none"></div>
 
         {/* Icon Container */}
-        <div className="relative z-10 flex-shrink-0 w-14 h-14 bg-[#147a81] rounded-2xl flex items-center justify-center text-white transition-all duration-500 group-hover:bg-orange-600">
+        <div className="relative z-10 flex-shrink-0 w-14 h-14 bg-primary rounded-2xl flex items-center justify-center text-white transition-all duration-500 group-hover:bg-secondary">
             <Icon size={26} strokeWidth={1.5} />
         </div>
 
@@ -46,11 +46,11 @@ const CarRentalFeatures = () => {
                 <div className="space-y-10">
                     <div className="max-w-md">
                         <div className="flex items-center gap-3 mb-4">
-                            <span className="text-orange-500 text-xl">✦</span>
+                            <span className="text-secondary text-xl">✦</span>
                             <h2 className="text-3xl md:text-4xl font-black text-slate-900 tracking-tight">
                                 Best Platform for Car Rental
                             </h2>
-                            <span className="text-orange-500 text-xl">✦</span>
+                            <span className="text-secondary text-xl">✦</span>
                         </div>
                         <p className="text-gray-500 leading-relaxed text-lg">
                             Why do we choose relax rent bikes generally if we

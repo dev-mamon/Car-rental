@@ -8,7 +8,7 @@ const steps = [
         description:
             "Determine the date & location for your car rental. Consider factors such as your travel itinerary, pickup/drop-off locations.",
         icon: <Calendar className="text-white" size={24} />,
-        bgColor: "bg-orange-500",
+        bgColor: "bg-secondary",
     },
     {
         id: 2,

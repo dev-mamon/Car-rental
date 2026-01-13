@@ -117,19 +117,19 @@ export default function CarDetails() {
                     <nav className="flex justify-center items-center space-x-2 text-sm text-white">
                         <a
                             href="/"
-                            className="hover:text-orange-500 transition-colors"
+                            className="hover:text-secondary transition-colors"
                         >
                             Home
                         </a>
                         <span>/</span>
                         <a
                             href="#"
-                            className="hover:text-orange-500 transition-colors"
+                            className="hover:text-secondary transition-colors"
                         >
                             Listings
                         </a>
                         <span>/</span>
-                        <span className="text-orange-500 font-medium">
+                        <span className="text-secondary font-medium">
                             Chevrolet Camaro
                         </span>
                     </nav>
@@ -149,7 +149,7 @@ export default function CarDetails() {
                                 2023
                             </span>
                             <div className="flex items-center gap-1">
-                                <div className="flex text-orange-400">
+                                <div className="flex text-secondary">
                                     {[...Array(5)].map((_, i) => (
                                         <Star
                                             key={i}
@@ -252,7 +252,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Extra Service{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6">
                                 <ServiceIcon
@@ -294,7 +294,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Specifications{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <SpecItem
@@ -344,7 +344,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Car Features{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-y-4">
                                 {features.map((feature) => (
@@ -368,7 +368,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Description{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="text-sm text-gray-600 space-y-4 leading-relaxed">
                                 <p>
@@ -390,7 +390,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Policy Documents{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <p className="text-sm text-gray-500 italic">
                                 No policy documents available at this time.
@@ -400,7 +400,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Frequently Asked Questions{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="space-y-3">
                                 {faqs.map((faq, i) => (
@@ -450,7 +450,7 @@ export default function CarDetails() {
                         <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                             <h3 className="text-lg font-bold mb-6 flex flex-col">
                                 Reviews{" "}
-                                <span className="w-12 h-1 bg-orange-500 mt-1 rounded-full"></span>
+                                <span className="w-12 h-1 bg-secondary mt-1 rounded-full"></span>
                             </h3>
                             <div className="border border-gray-100 rounded-xl p-6">
                                 <div className="flex items-center justify-between mb-4">
@@ -501,7 +501,7 @@ export default function CarDetails() {
                             <h3 className="text-lg font-bold mb-1">
                                 Booking Form
                             </h3>
-                            <div className="w-10 h-1 bg-orange-500 rounded-full mb-6"></div>
+                            <div className="w-10 h-1 bg-secondary rounded-full mb-6"></div>
 
                             <div className="space-y-4">
                                 {/* Rental Type */}
@@ -601,7 +601,7 @@ export default function CarDetails() {
 
                                 {/* Buttons */}
                                 <div className="space-y-3 pt-2">
-                                    <button className="w-full bg-orange-500 text-white font-bold py-4 rounded-lg transition-all duration-300 hover:bg-[#EA580C] shadow-md">
+                                    <button className="w-full bg-secondary text-secondary-foreground font-bold py-4 rounded-lg transition-all duration-300 hover:bg-secondary/90 shadow-md">
                                         Check Availability
                                     </button>
                                     <button className="w-full bg-[#157284] text-white font-bold py-4 rounded-lg transition-all duration-300 hover:bg-[#115e6b]">
@@ -762,7 +762,7 @@ function RelatedCarCard({ image, brand, name, location, price }) {
                     </div>
                 </div>
 
-                <button className="w-full bg-[#111827] text-white py-3 rounded-xl font-bold text-sm hover:bg-orange-500 transition-colors flex items-center justify-center gap-2">
+                <button className="w-full bg-[#111827] text-white py-3 rounded-xl font-bold text-sm hover:bg-secondary transition-colors flex items-center justify-center gap-2">
                     Rent Now
                 </button>
             </div>

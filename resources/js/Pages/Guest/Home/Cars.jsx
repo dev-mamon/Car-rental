@@ -185,7 +185,7 @@ export default function CarListing() {
                                     <span className="bg-white/90 backdrop-blur-md text-slate-800 text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-sm">
                                         {car.brand}
                                     </span>
-                                    <span className="bg-[#22C55E] text-white text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-sm">
+                                    <span className="bg-secondary text-secondary-foreground text-[11px] font-bold px-3 py-1.5 rounded-lg shadow-sm">
                                         {car.status}
                                     </span>
                                 </div>
@@ -204,7 +204,7 @@ export default function CarListing() {
                             <div className="p-6">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
-                                        <h3 className="text-xl font-bold text-slate-800 group-hover:text-blue-600 transition-colors">
+                                        <h3 className="text-xl font-bold text-slate-800 group-hover:text-primary transition-colors">
                                             {car.name}
                                         </h3>
                                         <div className="flex items-center gap-1 mt-2">

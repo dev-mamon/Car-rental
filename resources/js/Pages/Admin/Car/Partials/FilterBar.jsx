@@ -29,7 +29,7 @@ export default function FilterBar({
                 <Search
                     className={`absolute left-3 top-1/2 -translate-y-1/2 transition-colors ${
                         isClientSideLoading
-                            ? "text-blue-500 animate-pulse"
+                            ? "text-orange-600 animate-pulse"
                             : "text-slate-400"
                     }`}
                     size={16}
@@ -39,7 +39,7 @@ export default function FilterBar({
                     value={search}
                     onChange={(e) => handleSearch(e.target.value)}
                     placeholder="Search products..."
-                    className="w-full pl-10 pr-4 py-2 bg-[#F3F6F9] border border-transparent rounded-md text-sm outline-none focus:bg-white focus:border-blue-400 focus:ring-4 focus:ring-blue-50 transition-all"
+                    className="w-full pl-10 pr-4 py-2 bg-[#F3F6F9] border border-transparent rounded-md text-sm outline-none focus:bg-white focus:border-orange-600 focus:ring-4 focus:ring-orange-600/10 transition-all"
                 />
             </div>
 
@@ -47,7 +47,7 @@ export default function FilterBar({
                 {/* Brand Filter */}
                 <DropdownMenu>
                     <DropdownMenuTrigger
-                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-blue-200 outline-none focus:ring-2 focus:ring-blue-100 disabled:opacity-50"
+                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-orange-600/30 outline-none focus:ring-2 focus:ring-orange-600/20 disabled:opacity-50"
                         disabled={isClientSideLoading}
                     >
                         <span className="truncate">
@@ -62,7 +62,7 @@ export default function FilterBar({
                         >
                             All Brands{" "}
                             {currentBrand === "" && (
-                                <Check size={14} className="text-blue-500" />
+                                <Check size={14} className="text-orange-600" />
                             )}
                         </DropdownMenuItem>
                         {brands.map((b) => (
@@ -75,7 +75,7 @@ export default function FilterBar({
                                 {currentBrand === b.name && (
                                     <Check
                                         size={14}
-                                        className="text-blue-500"
+                                        className="text-orange-600"
                                     />
                                 )}
                             </DropdownMenuItem>
@@ -86,7 +86,7 @@ export default function FilterBar({
                 {/* Transmission Filter */}
                 <DropdownMenu>
                     <DropdownMenuTrigger
-                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-blue-200 disabled:opacity-50"
+                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-orange-600/30 disabled:opacity-50"
                         disabled={isClientSideLoading}
                     >
                         <span className="truncate">
@@ -106,7 +106,7 @@ export default function FilterBar({
                                     (t === "all" ? "" : t) && (
                                     <Check
                                         size={14}
-                                        className="text-blue-500"
+                                        className="text-orange-600"
                                     />
                                 )}
                             </DropdownMenuItem>
@@ -117,7 +117,7 @@ export default function FilterBar({
                 {/* Fuel Filter */}
                 <DropdownMenu>
                     <DropdownMenuTrigger
-                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-blue-200 disabled:opacity-50"
+                        className="bg-[#F3F6F9] px-4 py-2 rounded-md text-sm text-gray-600 flex items-center justify-between min-w-[140px] border border-transparent hover:border-orange-600/30 disabled:opacity-50"
                         disabled={isClientSideLoading}
                     >
                         <span className="truncate">
@@ -142,7 +142,7 @@ export default function FilterBar({
                                 {currentFuel === f && (
                                     <Check
                                         size={14}
-                                        className="text-blue-500"
+                                        className="text-orange-600"
                                     />
                                 )}
                             </DropdownMenuItem>
@@ -160,7 +160,7 @@ export default function FilterBar({
                             onClick={() =>
                                 router.get(route("admin.cars.index"))
                             }
-                            className="flex items-center gap-2 px-3 py-2 bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white rounded-md transition-all text-xs font-bold"
+                            className="flex items-center gap-2 px-3 py-2 bg-orange-600/10 text-orange-600 hover:bg-orange-600 hover:text-orange-600-foreground rounded-md transition-all text-xs font-bold"
                             disabled={isClientSideLoading}
                         >
                             <RotateCcw size={14} />

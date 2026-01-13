@@ -11,9 +11,9 @@ export default function BulkActionBanner({
     getEffectiveSelectedIds,
 }) {
     return (
-        <div className="bg-blue-600 text-white px-6 py-2.5 flex items-center justify-between">
+        <div className="bg-primary text-orange-600-foreground px-6 py-2.5 flex items-center justify-between">
             <div className="flex items-center gap-4 text-sm font-medium">
-                <span className="bg-white text-blue-600 px-2 py-0.5 rounded-full font-bold text-xs">
+                <span className="bg-white text-orange-600 px-2 py-0.5 rounded-full font-bold text-xs">
                     {selectAllGlobal
                         ? `All (${cars.total})`
                         : selectedIds.length}
@@ -24,7 +24,7 @@ export default function BulkActionBanner({
                     cars.total > cars.data.length && (
                         <button
                             onClick={setSelectAllGlobal}
-                            className="ml-2 text-xs bg-blue-500 px-3 py-1 rounded border border-blue-400"
+                            className="ml-2 text-xs bg-gray-600 px-3 py-1 rounded border border-orange-600/30"
                         >
                             Select all {cars.total} vehicles
                         </button>

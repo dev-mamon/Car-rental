@@ -166,10 +166,10 @@ export default function CarList({
                         href={route("admin.cars.create")}
                         className="group relative flex items-center justify-end h-10 min-w-[40px] transition-all duration-500 ease-in-out"
                     >
-                        <span className="absolute right-12 whitespace-nowrap text-blue-500 font-medium opacity-100 group-hover:text-white group-hover:right-8 transition-all duration-500 ease-in-out z-10 pointer-events-none">
+                        <span className="absolute right-12 whitespace-nowrap text-primary font-medium opacity-100 group-hover:text-white group-hover:right-8 transition-all duration-500 ease-in-out z-10 pointer-events-none">
                             Add New product
                         </span>
-                        <div className="flex items-center justify-center bg-[#3B82F6] text-white h-10 w-10 group-hover:w-44 rounded-full transition-all duration-500 ease-in-out shadow-md overflow-hidden relative">
+                        <div className="flex items-center justify-center bg-primary text-primary-foreground h-10 w-10 group-hover:w-44 rounded-full transition-all duration-500 ease-in-out shadow-md overflow-hidden relative">
                             <div className="absolute right-0 flex items-center justify-center min-w-[40px] h-10 z-20">
                                 <Plus size={20} />
                             </div>
@@ -198,130 +198,126 @@ export default function CarList({
                 />
 
                 {/* Table Container */}
-                <div className="overflow-x-auto min-h-[400px] relative" style={{ willChange: 'scroll-position' }}>
+                <div
+                    className="overflow-x-auto min-h-[400px] relative"
+                    style={{ willChange: "scroll-position" }}
+                >
                     {showSkeleton ? (
                         <div>
                             <TableSkeleton />
                         </div>
                     ) : cars.data.length > 0 ? (
                         <div>
-                                <table className="w-full text-left border-collapse">
-                                    <thead>
-                                        <tr className="text-gray-400 font-bold text-[11px] uppercase tracking-wider border-b border-gray-100 bg-gray-50/30">
-                                            <th className="py-4 px-6 w-10 text-center">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={
-                                                        isAllPageSelected ||
-                                                        selectAllGlobal
-                                                    }
-                                                    ref={(el) => {
-                                                        if (el)
-                                                            el.indeterminate =
-                                                                (isPartialSelected &&
-                                                                    !selectAllGlobal) ||
-                                                                (selectAllGlobal &&
-                                                                    excludedIds.length >
-                                                                        0 &&
-                                                                    excludedIds.length <
-                                                                        cars.total);
-                                                    }}
-                                                    onChange={toggleSelectAll}
-                                                    className="rounded border-gray-300 accent-blue-500 cursor-pointer"
-                                                    disabled={
-                                                        isClientSideLoading
-                                                    }
-                                                />
-                                            </th>
-                                            <th className="py-4 px-4">Thumb</th>
-                                            <th className="py-4 px-4">
-                                                Name / Brand
-                                            </th>
-                                            <th className="py-4 px-4">
-                                                Owner / Category
-                                            </th>
-                                            <th className="py-4 px-4">
-                                                Ratings
-                                            </th>
-                                            <th className="py-4 px-4">
-                                                Price Details
-                                            </th>
-                                            <th className="py-4 px-4">Info</th>
-                                            <th className="py-4 px-4">
-                                                Published
-                                            </th>
-                                            <th className="py-4 px-4 text-right pr-10">
-                                                Options
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-100">
-                                        {cars.data.map((item) => (
-                                            <CarTableRow
-                                                key={item.id}
-                                                item={item}
-                                                isEffectivelySelected={
-                                                    isEffectivelySelected
+                            <table className="w-full text-left border-collapse">
+                                <thead>
+                                    <tr className="text-gray-400 font-bold text-[11px] uppercase tracking-wider border-b border-gray-100 bg-gray-50/30">
+                                        <th className="py-4 px-6 w-10 text-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={
+                                                    isAllPageSelected ||
+                                                    selectAllGlobal
                                                 }
-                                                toggleSelect={toggleSelect}
-                                                isClientSideLoading={
-                                                    isClientSideLoading
-                                                }
+                                                ref={(el) => {
+                                                    if (el)
+                                                        el.indeterminate =
+                                                            (isPartialSelected &&
+                                                                !selectAllGlobal) ||
+                                                            (selectAllGlobal &&
+                                                                excludedIds.length >
+                                                                    0 &&
+                                                                excludedIds.length <
+                                                                    cars.total);
+                                                }}
+                                                onChange={toggleSelectAll}
+                                                className="rounded border-gray-300 accent-blue-500 cursor-pointer"
+                                                disabled={isClientSideLoading}
                                             />
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </th>
+                                        <th className="py-4 px-4">Thumb</th>
+                                        <th className="py-4 px-4">
+                                            Name / Brand
+                                        </th>
+                                        <th className="py-4 px-4">
+                                            Owner / Category
+                                        </th>
+                                        <th className="py-4 px-4">Ratings</th>
+                                        <th className="py-4 px-4">
+                                            Price Details
+                                        </th>
+                                        <th className="py-4 px-4">Info</th>
+                                        <th className="py-4 px-4">Published</th>
+                                        <th className="py-4 px-4 text-right pr-10">
+                                            Options
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-gray-100">
+                                    {cars.data.map((item) => (
+                                        <CarTableRow
+                                            key={item.id}
+                                            item={item}
+                                            isEffectivelySelected={
+                                                isEffectivelySelected
+                                            }
+                                            toggleSelect={toggleSelect}
+                                            isClientSideLoading={
+                                                isClientSideLoading
+                                            }
+                                            isProcessing={isProcessing}
+                                        />
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     ) : (
                         <div className="py-12 flex flex-col items-center justify-center bg-white">
-                                {/* Minimal LinkedIn-Style Illustration Container */}
-                                <div className="relative mb-4">
-                                    <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center">
-                                        <Car
-                                            size={40}
-                                            className="text-slate-300 stroke-[1.2]"
-                                        />
-                                    </div>
-                                    <div className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-sm border border-slate-100">
-                                        <Search
-                                            size={16}
-                                            className="text-blue-500"
-                                        />
-                                    </div>
+                            {/* Minimal LinkedIn-Style Illustration Container */}
+                            <div className="relative mb-4">
+                                <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center">
+                                    <Car
+                                        size={40}
+                                        className="text-slate-300 stroke-[1.2]"
+                                    />
                                 </div>
-
-                                {/* Typography Section */}
-                                <div className="text-center max-w-sm px-6">
-                                    <h3 className="text-[19px] font-semibold text-slate-900 mb-2">
-                                        No results found
-                                    </h3>
-                                    <p className="text-[14px] text-slate-500 leading-normal mb-8">
-                                        Try adjusting your search or filters to
-                                        find what you're looking for.
-                                    </p>
+                                <div className="absolute bottom-0 right-0 bg-white p-1.5 rounded-full shadow-sm border border-slate-100">
+                                    <Search
+                                        size={16}
+                                        className="text-primary"
+                                    />
                                 </div>
+                            </div>
 
-                                {/* LinkedIn-Style Action Buttons */}
-                                <div className="flex flex-col sm:flex-row items-center gap-3">
-                                    <button
-                                        onClick={() =>
-                                            router.get(
-                                                route("admin.cars.index")
-                                            )
-                                        }
-                                        className="px-6 py-1.5 text-[14px] font-semibold text-slate-600 hover:bg-slate-50 border border-slate-400 rounded-full transition-all duration-200"
-                                    >
-                                        Clear all filters
-                                    </button>
+                            {/* Typography Section */}
+                            <div className="text-center max-w-sm px-6">
+                                <h3 className="text-[19px] font-semibold text-slate-900 mb-2">
+                                    No results found
+                                </h3>
+                                <p className="text-[14px] text-slate-500 leading-normal mb-8">
+                                    Try adjusting your search or filters to find
+                                    what you're looking for.
+                                </p>
+                            </div>
 
-                                    <Link
-                                        href={route("admin.cars.create")}
-                                        className="px-6 py-1.5 text-[14px] font-semibold text-white bg-[#0A66C2] hover:bg-[#004182] rounded-full transition-all duration-200 flex items-center gap-1"
-                                    >
-                                        <Plus size={16} />
-                                        Add new product
-                                    </Link>
-                                </div>
+                            {/* LinkedIn-Style Action Buttons */}
+                            <div className="flex flex-col sm:flex-row items-center gap-3">
+                                <button
+                                    onClick={() =>
+                                        router.get(route("admin.cars.index"))
+                                    }
+                                    className="px-6 py-1.5 text-[14px] font-semibold text-slate-600 hover:bg-slate-50 border border-slate-400 rounded-full transition-all duration-200"
+                                >
+                                    Clear all filters
+                                </button>
+
+                                <Link
+                                    href={route("admin.cars.create")}
+                                    className="px-6 py-1.5 text-[14px] font-semibold text-white bg-primary hover:bg-blue-600 rounded-full transition-all duration-200 flex items-center gap-1"
+                                >
+                                    <Plus size={16} />
+                                    Add new product
+                                </Link>
+                            </div>
                         </div>
                     )}
 

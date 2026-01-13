@@ -31,7 +31,7 @@ const Input = React.forwardRef(
                         // Dynamic Border: Red if error, Orange if focus, Gray otherwise
                         error
                             ? "border-red-500 focus:border-red-600 focus:ring-red-500/20"
-                            : "border-gray-200 focus:border-[#FF9F43] focus:ring-[#FF9F43]/20",
+                            : "border-gray-200 focus:border-secondary focus:ring-secondary/20",
 
                         isTextArea ? "min-h-[100px] resize-y" : "h-10",
                         "disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500",

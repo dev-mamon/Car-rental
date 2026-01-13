@@ -57,14 +57,14 @@ const Header = ({ onMenuClick }) => {
                     <input
                         type="text"
                         placeholder="Search parts..."
-                        className="w-[300px] 2xl:w-[450px] pl-11 pr-4 py-2.5 rounded-full bg-gray-50 border border-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-orange-100 transition-all"
+                        className="w-[300px] 2xl:w-[450px] pl-11 pr-4 py-2.5 rounded-full bg-gray-50 border border-gray-100 text-sm focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
                     />
                 </div>
 
                 {/* Notification Bell */}
                 <button className="relative p-2.5 md:p-3 rounded-full bg-gray-50 text-slate-600 hover:bg-gray-100 transition shrink-0">
                     <Bell size={20} />
-                    <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-orange-500 border-2 border-white rounded-full" />
+                    <span className="absolute top-2 right-2 w-2.5 h-2.5 bg-blue-300 border-2 border-white rounded-full" />
                 </button>
 
                 {/* Profile Dropdown */}

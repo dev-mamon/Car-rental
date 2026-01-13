@@ -18,7 +18,7 @@ export default function HeroSection() {
                         <div className="space-y-4">
                             <h2 className="text-5xl lg:text-7xl font-extrabold leading-[1.1] tracking-tight">
                                 Explore our{" "}
-                                <span className="text-orange-500">
+                                <span className="text-secondary">
                                     Verified &
                                 </span>{" "}
                                 <br />
@@ -58,11 +58,11 @@ export default function HeroSection() {
 
                         {/* Buttons */}
                         <div className="flex flex-wrap items-center gap-5">
-                            <button className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-xl font-bold text-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-orange-500/40">
+                            <button className="bg-secondary hover:bg-secondary/90 text-secondary-foreground px-10 py-4 rounded-xl font-bold text-lg flex items-center gap-2 transition-all hover:shadow-lg hover:shadow-secondary/40">
                                 Rent a Car <span>→</span>
                             </button>
                             <button className="bg-[#1a1a1a]/80 backdrop-blur-md text-white px-10 py-4 rounded-xl font-bold text-lg flex items-center gap-2 border border-gray-700 hover:bg-gray-800">
-                                <span className="text-orange-500 text-2xl">
+                                <span className="text-secondary text-2xl">
                                     +
                                 </span>{" "}
                                 Add Your Car
@@ -102,7 +102,7 @@ export default function HeroSection() {
                 <div className="mt-16 bg-[#161616]/90 backdrop-blur-2xl border border-white/10 p-3 rounded-2xl lg:rounded-full flex flex-col lg:flex-row items-center gap-4 lg:gap-0 shadow-[0_30px_60px_rgba(0,0,0,0.6)] animate-fade-in-up">
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 flex-1 w-full lg:divide-x lg:divide-gray-800">
                         <div className="px-10 py-3 text-left">
-                            <label className="text-[11px] text-orange-500 uppercase font-black block mb-1 tracking-widest">
+                            <label className="text-[11px] text-secondary uppercase font-black block mb-1 tracking-widest">
                                 Pickup Location
                             </label>
                             <select className="bg-transparent text-white text-sm w-full outline-none font-semibold cursor-pointer appearance-none">
@@ -144,7 +144,7 @@ export default function HeroSection() {
                             />
                         </div>
                     </div>
-                    <button className="bg-orange-500 w-full lg:w-16 h-16 rounded-xl lg:rounded-full flex items-center justify-center hover:bg-orange-600 transition-all shrink-0 shadow-lg shadow-orange-500/30">
+                    <button className="bg-secondary w-full lg:w-16 h-16 rounded-xl lg:rounded-full flex items-center justify-center hover:bg-secondary/90 transition-all shrink-0 shadow-lg shadow-secondary/30">
                         <svg
                             className="w-7 h-7 text-white"
                             fill="none"

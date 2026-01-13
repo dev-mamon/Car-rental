@@ -90,13 +90,13 @@ export default function Pricing() {
                             key={index}
                             className={`relative rounded-[20px] p-8 border transition-all duration-300 flex flex-col ${
                                 plan.isCustom
-                                    ? "bg-[#22C55E] text-white border-transparent"
+                                    ? "bg-secondary text-secondary-foreground border-transparent"
                                     : "bg-white border-gray-100 shadow-sm hover:shadow-lg"
                             }`}
                         >
                             {/* Recommended Badge */}
                             {plan.isRecommended && (
-                                <div className="absolute -top-5 right-10 bg-[#087F8C] text-white px-4 py-1.5 rounded-t-lg flex items-center gap-1 text-sm font-semibold">
+                                <div className="absolute -top-5 right-10 bg-primary text-primary-foreground px-4 py-1.5 rounded-t-lg flex items-center gap-1 text-sm font-semibold">
                                     <span className="text-xs">★</span>{" "}
                                     Recommended
                                 </div>
