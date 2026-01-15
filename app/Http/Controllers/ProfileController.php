@@ -65,11 +65,11 @@ class ProfileController extends Controller
 
     public function carDetails()
     {
-        return Inertia::render(component: 'Guest/Home/CarDetails');
+        return Inertia::render(component: 'Guest/Home/Products/CarDetails');
     }
 
     public function carList()
     {
-        return Inertia::render(component: 'Guest/Home/CarList');
+        return Inertia::render(component: 'Guest/Home/Products/CarList');
     }
 }

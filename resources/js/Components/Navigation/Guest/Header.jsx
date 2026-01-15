@@ -1,165 +1,128 @@
-"use client";
+import React, { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Car, Menu, X, ChevronRight } from "lucide-react";
 
-import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
-
-export default function Header() {
+const Header = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
     const navLinks = [
         { name: "Home", href: "/" },
-        { name: "Listings", href: "/listings" },
-        { name: "Pages", href: "/pages" },
-        { name: "Blog", href: "/blog" },
-        { name: "Dashboard", href: "/dashboard" },
+        { name: "Fleet", href: "/fleet" },
+        { name: "Services", href: "/services" },
+        { name: "Membership", href: "/membership" },
+        { name: "Contact", href: "/contact" },
     ];
 
     return (
-        <header className="bg-[#0f0f0f] text-white border-b border-gray-800 sticky top-0 z-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex items-center justify-between h-20">
-                    {/* Logo Section */}
-                    <Link href="/" className="flex items-center gap-2 shrink-0">
-                        <div className="bg-white p-1.5 rounded-lg">
-                            <svg
-                                width="24"
-                                height="24"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="#f97316"
-                                strokeWidth="2.5"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                            >
-                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                            </svg>
+        <div className="fixed top-0 left-0 w-full z-50 px-4 sm:px-6 lg:px-8 py-4 pointer-events-none">
+            <motion.header
+                initial={{ y: -100 }}
+                animate={{ y: 0 }}
+                className={`mx-auto max-w-7xl w-full pointer-events-auto transition-all duration-500 rounded-full ${
+                    scrolled
+                        ? "bg-white/90 backdrop-blur-2xl border border-slate-200/50 shadow-xl py-3"
+                        : "bg-transparent py-4"
+                }`}
+            >
+                <div className="px-6 sm:px-8 flex items-center justify-between">
+                    {/* Logo */}
+                    <div className="flex items-center gap-2 group cursor-pointer">
+                        <div className="bg-gradient-to-br from-blue-600 to-cyan-500 p-2 rounded-xl shadow-lg shadow-blue-500/20">
+                            <Car className="text-white" size={20} />
                         </div>
-                        <h1 className="text-xl font-black tracking-tighter flex items-center">
-                            <span className="text-secondary">CAR</span>
-                            <span className="text-white ml-1">RENT</span>
-                        </h1>
-                    </Link>
+                        <div>
+                            <h1 className="text-xl font-black tracking-tighter text-slate-900">
+                                LUX<span className="text-blue-600">DRIVE</span>
+                            </h1>
+                            <p className="text-[10px] text-slate-500 -mt-1">
+                                Premium Mobility
+                            </p>
+                        </div>
+                    </div>
 
-                    {/* Desktop Navigation Links */}
-                    <nav className="hidden lg:flex items-center gap-8">
+                    {/* Desktop Navigation */}
+                    <nav className="hidden lg:flex items-center gap-1 bg-white/80 p-1 rounded-full border border-slate-200 shadow-sm">
                         {navLinks.map((link) => (
-                            <Link
+                            <a
                                 key={link.name}
                                 href={link.href}
-                                className={`text-[15px] font-medium transition-colors flex items-center gap-1.5 group ${
+                                className={`px-5 py-2 text-[13px] font-bold rounded-full transition-all ${
                                     link.name === "Home"
-                                        ? "text-secondary"
-                                        : "text-gray-300 hover:text-secondary"
+                                        ? "bg-gradient-to-r from-blue-600 to-cyan-500 text-white shadow-md"
+                                        : "text-slate-700 hover:text-blue-600 hover:bg-slate-50"
                                 }`}
                             >
                                 {link.name}
-                                <svg
-                                    className="w-3 h-3 mt-0.5 opacity-70 group-hover:rotate-180 transition-transform"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="3"
-                                        d="M19 9l-7 7-7-7"
-                                    />
-                                </svg>
-                            </Link>
+                            </a>
                         ))}
                     </nav>
 
-                    {/* Auth Buttons + Mobile Toggle */}
-                    <div className="flex items-center gap-3">
-                        {/* Desktop Auth */}
-                        <div className="hidden sm:flex items-center gap-3">
-                            <Link
-                                href="/login"
-                                className="text-gray-200 px-4 py-2 text-sm font-semibold hover:text-secondary transition-colors"
-                            >
-                                Sign In
-                            </Link>
-                            <Link
-                                href="/register"
-                                className="bg-secondary text-secondary-foreground px-5 py-2.5 rounded-lg font-bold text-sm hover:bg-secondary/90 transition-all shadow-lg active:scale-95"
-                            >
-                                Sign Up
-                            </Link>
-                        </div>
-
-                        {/* Mobile Menu Button */}
+                    {/* Auth & Mobile Menu */}
+                    <div className="flex items-center gap-4">
+                        <a
+                            href="/login"
+                            className="hidden sm:block text-slate-600 font-semibold text-sm hover:text-blue-600 transition-colors"
+                        >
+                            Sign In
+                        </a>
+                        <a
+                            href="/register"
+                            className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white px-5 py-2.5 rounded-full font-bold text-sm hover:shadow-lg hover:shadow-blue-500/30 transition-all shadow-md"
+                        >
+                            Get Started
+                        </a>
                         <button
                             onClick={() => setIsMenuOpen(!isMenuOpen)}
-                            className="lg:hidden p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none transition-colors"
+                            className="lg:hidden text-slate-700 p-2 rounded-lg hover:bg-slate-100"
                         >
-                            <svg
-                                className="h-7 w-7"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                {isMenuOpen ? (
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                ) : (
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth="2"
-                                        d="M4 6h16M4 12h16M4 18h16"
-                                    />
-                                )}
-                            </svg>
+                            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                         </button>
                     </div>
                 </div>
-            </div>
 
-            {/* Mobile Navigation Drawer */}
-            <div
-                className={`lg:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-                    isMenuOpen
-                        ? "max-h-[500px] opacity-100"
-                        : "max-h-0 opacity-0"
-                }`}
-            >
-                <div className="px-4 pt-2 pb-6 space-y-1 bg-[#141414] border-t border-gray-800">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.name}
-                            href={link.href}
-                            onClick={() => setIsMenuOpen(false)}
-                            className="block px-3 py-4 text-base font-medium text-gray-300 hover:text-secondary border-b border-gray-800/50"
+                {/* Mobile Menu */}
+                <AnimatePresence>
+                    {isMenuOpen && (
+                        <motion.div
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="lg:hidden mt-4 bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden"
                         >
-                            {link.name}
-                        </Link>
-                    ))}
-
-                    {/* Mobile Auth Buttons (Visible on extra small screens) */}
-                    <div className="pt-4 flex flex-col gap-3 sm:hidden">
-                        <Link
-                            href="/login"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="w-full bg-gray-800 text-white px-5 py-3 rounded-lg font-bold text-center"
-                        >
-                            Sign In
-                        </Link>
-                        <Link
-                            href="/register"
-                            onClick={() => setIsMenuOpen(false)}
-                            className="w-full bg-secondary text-secondary-foreground px-5 py-3 rounded-lg font-bold text-center"
-                        >
-                            Sign Up
-                        </Link>
-                    </div>
-                </div>
-            </div>
-        </header>
+                            <div className="p-4 space-y-2">
+                                {navLinks.map((link) => (
+                                    <a
+                                        key={link.name}
+                                        href={link.href}
+                                        className="flex items-center justify-between p-3 rounded-xl text-slate-700 hover:bg-slate-50 hover:text-blue-600 font-semibold"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        {link.name}
+                                        <ChevronRight size={16} />
+                                    </a>
+                                ))}
+                                <div className="pt-4 border-t border-slate-200">
+                                    <a
+                                        href="/login"
+                                        className="block p-3 rounded-xl text-slate-600 hover:bg-slate-50"
+                                    >
+                                        Sign In
+                                    </a>
+                                </div>
+                            </div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+            </motion.header>
+        </div>
     );
-}
+};
+
+export default Header;

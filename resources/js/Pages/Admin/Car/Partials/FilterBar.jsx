@@ -5,7 +5,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/DropdownMenu";
-import { Search, ChevronDown, Check, RotateCcw } from "lucide-react";
+import { Search, Check, RotateCcw } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function FilterBar({

@@ -20,7 +20,6 @@ export default function CarList({
     filters = {},
     counts = {},
 }) {
-    // শুধুমাত্র একটি ইউনিফাইড লোডিং স্টেট যা স্কেলিটন কন্ট্রোল করবে
     const [isLoading, setIsLoading] = useState(false);
     const [isProcessing, setIsProcessing] = useState(false);
     const searchTimeoutRef = useRef(null);
