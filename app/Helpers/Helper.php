@@ -24,7 +24,7 @@ class Helper
             $fullPath = public_path($basePath);
             File::ensureDirectoryExists($fullPath);
 
-            // ইউনিক নাম তৈরি
+            // file save
             $filename = time().'_'.Str::random(8).'.webp';
 
             $manager = new ImageManager(new Driver);
@@ -65,9 +65,7 @@ class Helper
         if (! $filePath) {
             return false;
         }
-
         $fullPath = public_path($filePath);
-
         if (file_exists($fullPath) && is_file($fullPath)) {
             return unlink($fullPath);
         }

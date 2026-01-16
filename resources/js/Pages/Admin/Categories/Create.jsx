@@ -137,14 +137,6 @@ export default function CategoryCreate({ auth }) {
 
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                     <div className="space-y-6">
-                                        <div className="flex items-center gap-3">
-                                            <Info
-                                                size={18}
-                                                className="text-slate-400"
-                                            />
-                                            <Label>General Information</Label>
-                                        </div>
-
                                         <Input
                                             label="Category Name *"
                                             placeholder="e.g. Luxury Sedans"
@@ -161,13 +153,13 @@ export default function CategoryCreate({ auth }) {
                                                     `categories.${index}.name`
                                                 ]
                                             }
-                                            className="border-blue-200 focus:border-slate-900 transition-all"
+                                            className="border-blue-200"
                                         />
 
                                         <div className="space-y-1.5">
                                             <Label>Description</Label>
                                             <textarea
-                                                className="w-full min-h-[140px] border border-blue-200 rounded-xl px-4 py-3 text-sm focus:ring-1 focus:ring-slate-900/10 focus:border-slate-900 outline-none transition bg-white placeholder:text-slate-300"
+                                                className="w-full min-h-[140px] border border-blue-200 rounded-xl px-4 py-3 text-sm  bg-white placeholder:text-slate-300"
                                                 placeholder="Describe the category..."
                                                 value={category.description}
                                                 onChange={(e) =>
@@ -182,13 +174,6 @@ export default function CategoryCreate({ auth }) {
                                     </div>
 
                                     <div className="space-y-6">
-                                        <div className="flex items-center gap-3">
-                                            <ImageIcon
-                                                size={18}
-                                                className="text-slate-400"
-                                            />
-                                            <Label>Category Icon</Label>
-                                        </div>
                                         <FileUpload
                                             data={category}
                                             setData={(field, value) =>

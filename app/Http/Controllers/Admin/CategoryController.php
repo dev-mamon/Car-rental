@@ -19,23 +19,31 @@ class CategoryController extends Controller
     {
         $query = Category::query();
 
-        // ১. সার্চ লজিক
+        // 1. Filter by Search (Name or Description)
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('name', 'like', "%{$request->search}%")
-                    ->orWhere('description', 'like', "%{$request->search}%");
+                    ->orWhere('description', 'like', "%{$request->search}%")
+                    ->orWhere('slug', 'like', "%{$request->search}%");
             });
         }
+        // 2. Filter by Status
+        if ($request->filled('status') && $request->status !== 'all') {
+            $query->where('status', $request->status);
+        }
 
-        // ২. প্যাগিনেশন
+        // 3. Get Paginated Results
         $categories = $query->latest()
             ->paginate($request->per_page ?? 10)
             ->withQueryString();
 
-        // ৩. কাউন্টস (Cache ব্যবহার করে - আপনার CarController স্টাইলে)
-        $counts = Cache::remember('category_counts', 60, function () {
+        // 4. Generate Counts for Status Tabs
+
+        $counts = Cache::remember('category_counts', 10, function () {
             return [
                 'all' => Category::count(),
+                'active' => Category::where('status', 'active')->count(),
+                'inactive' => Category::where('status', 'inactive')->count(),
             ];
         });
 
@@ -68,11 +76,10 @@ class CategoryController extends Controller
         $data = $request->only(['name', 'description']);
         $data['slug'] = Str::slug($request->name);
 
-        // হেল্পার ব্যবহার করে ইমেজ আপলোড
         if ($request->hasFile('image')) {
             $upload = Helper::uploadFile($request->file('image'), 'categories', true);
             if ($upload) {
-                $data['icon'] = $upload['original']; // ডাটাবেসের icon কলামে পাথ সেভ
+                $data['icon'] = $upload['original'];
             }
         }
 
@@ -107,15 +114,14 @@ class CategoryController extends Controller
         $data['slug'] = Str::slug($request->name);
 
         if ($request->hasFile('image')) {
-            // ১. পুরনো ইমেজ ডিলিট করা (হেল্পার ব্যবহার করে)
+
             if ($category->icon) {
                 Helper::deleteFile($category->icon);
-                // থাম্বনেইল পাথ ডিলিট (যদি থাম্বনেইল ফোল্ডার আলাদা হয়)
+
                 $thumbPath = str_replace('categories/', 'categories/thumbs/', $category->icon);
                 Helper::deleteFile($thumbPath);
             }
 
-            // ২. নতুন ইমেজ আপলোড
             $upload = Helper::uploadFile($request->file('image'), 'categories', true);
             if ($upload) {
                 $data['icon'] = $upload['original'];
@@ -124,7 +130,7 @@ class CategoryController extends Controller
 
         $category->update($data);
 
-        return redirect()->route('admin.categories.index')
+        return redirect()->route('admin.category.index')
             ->with('success', 'Category updated successfully.');
     }
 

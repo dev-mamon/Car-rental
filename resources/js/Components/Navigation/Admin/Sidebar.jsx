@@ -21,7 +21,6 @@ import {
 const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
     const { url } = usePage();
 
-    // URL থেকে কুয়েরি প্যারামিটার (?search=abc) বাদ দিয়ে মেইন পাথ বের করা
     const currentPath = url.split("?")[0];
 
     const [openMenus, setOpenMenus] = useState({
@@ -34,7 +33,7 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
         setOpenMenus((prev) => ({ ...prev, [key]: !prev[key] }));
     };
 
-    // যখনই URL পরিবর্তন হবে, চেক করবে কোন ড্রপডাউনটি খোলা রাখা দরকার
+
     useEffect(() => {
         menuItems.forEach((item) => {
             if (
@@ -57,9 +56,9 @@ const Sidebar = ({ isCollapsed, isMobileOpen, setIsMobileOpen }) => {
         { label: "Orders", path: "/orders", icon: <ShoppingCart size={18} /> },
         {
             label: "Categories",
-            path: "/admin/category/create",
+            path: "/admin/category",
             icon: <List size={18} />,
-            key: "/admin/category/create",
+            key: "/admin/category",
         },
         { label: "Returns", path: "/returns", icon: <RefreshCw size={18} /> },
         { label: "All leads", path: "/leads", icon: <Users size={18} /> },
